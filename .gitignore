@@ -1,8 +1,0 @@
-*.exe
-*.out
-*.obj
-*.o
-output/
-.vscode/
-__pycache__/
-*.log
