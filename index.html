@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sakibul Islam Chy — Front-End Builds for Small Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EDF1F5;
+    --paper-dim: #E1E7ED;
+    --ink: #1D2B3A;
+    --ink-soft: #4A5A6B;
+    --coral: #E4572E;
+    --sage: #4F7965;
+    --line: #C7D0D9;
+    --card: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 { font-family: 'Sora', sans-serif; letter-spacing: -0.02em; }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ---- NAV ---- */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(237, 241, 245, 0.88);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+  }
+  .brand {
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  .brand span { color: var(--coral); }
+  .nav-links { display: flex; gap: 32px; font-size: 0.92rem; font-weight: 500; color: var(--ink-soft); }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+  .nav-cta:hover { background: var(--coral); }
+
+  /* ---- HERO ---- */
+  .hero { padding: 76px 0 60px; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--sage);
+    background: rgba(79, 121, 101, 0.1);
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-bottom: 18px;
+  }
+  .eyebrow::before { content: "● "; color: var(--sage); }
+  .hero h1 {
+    font-size: 2.7rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 18px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--coral);
+  }
+  .hero p {
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+    max-width: 46ch;
+    margin-bottom: 28px;
+  }
+  .hero-actions { display: flex; gap: 14px; }
+  .btn-primary {
+    background: var(--coral);
+    color: #fff;
+    padding: 13px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.94rem;
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-secondary {
+    border: 1.5px solid var(--line);
+    padding: 13px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.94rem;
+  }
+  .btn-secondary:hover { border-color: var(--ink); }
+
+  /* ---- CODE WINDOW (signature element) ---- */
+  .editor {
+    background: #17222E;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 24px 48px -12px rgba(29, 43, 58, 0.35);
+  }
+  .editor-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 11px 14px;
+    background: #10181F;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #E4572E; }
+  .dot.y { background: #E8B04B; }
+  .dot.g { background: #4F7965; }
+  .editor-tab {
+    margin-left: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: #8FA1B3;
+  }
+  .editor-body {
+    padding: 20px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.83rem;
+    line-height: 1.7;
+    min-height: 210px;
+    color: #C4D0DB;
+    white-space: pre-wrap;
+  }
+  .editor-body .tag { color: #E4572E; }
+  .editor-body .attr { color: #E8B04B; }
+  .editor-body .str { color: #8FBF9F; }
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 15px;
+    background: #E8B04B;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .preview-strip {
+    background: var(--paper-dim);
+    border-top: 1px solid #0000;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .preview-strip .url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    background: var(--card);
+    border-radius: 4px;
+    padding: 5px 10px;
+    flex: 1;
+  }
+
+  /* ---- SERVICES ---- */
+  .section { padding: 64px 0; }
+  .section-head { margin-bottom: 36px; }
+  .section-head .eyebrow { margin-bottom: 10px; }
+  .section-head h2 { font-size: 1.9rem; font-weight: 700; }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .service-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 26px 22px;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .service-card:hover { border-color: var(--coral); transform: translateY(-3px); }
+  .service-card .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--coral);
+    margin-bottom: 14px;
+  }
+  .service-card h3 { font-size: 1.08rem; margin-bottom: 8px; }
+  .service-card p { color: var(--ink-soft); font-size: 0.92rem; }
+  .service-card .price {
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--sage);
+    font-weight: 600;
+  }
+
+  /* ---- WORK ---- */
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .work-card {
+    display: block;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .work-card:hover { transform: translateY(-3px); border-color: var(--coral); }
+  .work-thumb {
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.85);
+    position: relative;
+  }
+  .work-thumb::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 14px);
+  }
+  .t1 { background: linear-gradient(135deg, #1D2B3A, #34495E); }
+  .t2 { background: linear-gradient(135deg, #4F7965, #2E4A3D); }
+  .t3 { background: linear-gradient(135deg, #E4572E, #A83B1E); }
+  .work-info { padding: 16px 18px 20px; }
+  .work-info h3 { font-size: 0.98rem; margin-bottom: 4px; }
+  .work-info p { color: var(--ink-soft); font-size: 0.85rem; }
+  .tag-row { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    background: var(--paper-dim);
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--ink-soft);
+  }
+
+  /* ---- ABOUT / PROCESS ---- */
+  .process {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .process-step {
+    padding: 24px 20px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .process-step .mono { color: var(--coral); font-size: 0.78rem; }
+  .process-step h3 { font-size: 0.98rem; margin: 8px 0 6px; }
+  .process-step p { font-size: 0.85rem; color: var(--ink-soft); }
+
+  /* ---- CTA / FOOTER ---- */
+  .cta-band {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 14px;
+    padding: 48px 40px;
+    text-align: center;
+    margin: 20px 0 60px;
+  }
+  .cta-band h2 { font-size: 1.7rem; margin-bottom: 12px; }
+  .cta-band p { color: #A8B7C6; margin-bottom: 26px; }
+  .cta-band .btn-primary { background: var(--coral); }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 40px; }
+  footer .wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  footer .socials { display: flex; gap: 18px; }
+  footer .socials a:hover { color: var(--coral); }
+
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .services-grid, .work-grid { grid-template-columns: 1fr; }
+    .process { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero h1 { font-size: 2.1rem; }
+  }
+
+  :focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">sakib<span>.</span>dev</div>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#process">Process</a>
+    </div>
+    <a class="nav-cta" href="https://github.com/Sakib-Chy" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">CSE student, CIU · open for small projects</div>
+      <h1>I turn <em>plain HTML &amp; CSS</em><br>into pages that sell.</h1>
+      <p>I'm Sakibul, a Computer Science &amp; Engineering student at Chittagong Independent University. I build clean, fast, mobile-ready landing pages and fix broken ones - for shop owners, small clans, and small teams who need a site that just works.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#contact">Start a project</a>
+        <a class="btn-secondary" href="#work">See the work</a>
+      </div>
+    </div>
+    <div class="editor">
+      <div class="editor-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="editor-tab">landing.html</div>
+      </div>
+      <div class="editor-body" id="typewriter"></div>
+      <div class="preview-strip">
+        <div class="url">🔒 your-business.com</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">services</div>
+      <h2>Three ways I can help</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="num mono">01</div>
+        <h3>Landing pages</h3>
+        <p>A focused, one-page site for your business, product, or event - built from scratch, ready in days.</p>
+        <div class="price">from $80</div>
+      </div>
+      <div class="service-card">
+        <div class="num mono">02</div>
+        <h3>Fix &amp; polish</h3>
+        <p>Your site looks broken on phones, or the spacing's off? I'll clean up the CSS and make it responsive.</p>
+        <div class="price">from $35</div>
+      </div>
+      <div class="service-card">
+        <div class="num mono">03</div>
+        <h3>Email templates</h3>
+        <p>HTML email templates that render properly across Gmail, Outlook, and mobile - no broken layouts.</p>
+        <div class="price">from $45</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="work">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">recent builds</div>
+      <h2>A few sample projects</h2>
+    </div>
+    <div class="work-grid">
+      <a class="work-card" href="https://github.com/Sakib-Chy/Coffee-Shop" target="_blank" rel="noopener">
+        <div class="work-thumb t1">◆ coffee-shop.html</div>
+        <div class="work-info">
+          <h3>Coffee Shop landing page</h3>
+          <p>A single-page site built for a café concept - menu, hours, and location.</p>
+          <div class="tag-row"><span class="pill">HTML</span><span class="pill">CSS</span></div>
+        </div>
+      </a>
+      <a class="work-card" href="https://github.com/Sakib-Chy/WinTox" target="_blank" rel="noopener">
+        <div class="work-thumb t2">◆ wintox.html</div>
+        <div class="work-info">
+          <h3>WinTox clan site</h3>
+          <p>Built and launched a site for a PUBG clan - live and deployed.</p>
+          <div class="tag-row"><span class="pill">HTML</span><span class="pill">Deployed</span></div>
+        </div>
+      </a>
+      <a class="work-card" href="https://github.com/Sakib-Chy/Mily-s-Painting-gallery" target="_blank" rel="noopener">
+        <div class="work-thumb t3">◆ painting-gallery.html</div>
+        <div class="work-info">
+          <h3>Painting gallery site</h3>
+          <p>A gallery-style layout to showcase artwork, focused on clean CSS structure.</p>
+          <div class="tag-row"><span class="pill">CSS</span><span class="pill">Gallery layout</span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">how it works</div>
+      <h2>Simple, four-step process</h2>
+    </div>
+    <div class="process">
+      <div class="process-step">
+        <div class="mono">step 1</div>
+        <h3>You describe the page</h3>
+        <p>Tell me what it's for and who it's talking to.</p>
+      </div>
+      <div class="process-step">
+        <div class="mono">step 2</div>
+        <h3>I draft the layout</h3>
+        <p>You get a first version to react to within a couple of days.</p>
+      </div>
+      <div class="process-step">
+        <div class="mono">step 3</div>
+        <h3>We refine together</h3>
+        <p>Quick revisions until it looks and reads right.</p>
+      </div>
+      <div class="process-step">
+        <div class="mono">step 4</div>
+        <h3>You get the files</h3>
+        <p>Clean HTML/CSS handed off, ready to host anywhere.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="cta-band" id="contact">
+    <h2>Have a small site that needs building?</h2>
+    <p>Send a quick note about what you need - most quotes go out within a day.</p>
+    <a class="btn-primary" href="https://github.com/Sakib-Chy" target="_blank" rel="noopener">View my GitHub</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Sakibul Islam Chy</div>
+    <div class="socials">
+      <a href="https://github.com/Sakib-Chy" target="_blank" rel="noopener">GitHub</a>
+      <a href="#">Fiverr</a>
+      <a href="#">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const lines = [
+    { html: '&lt;<span class="tag">section</span> <span class="attr">class</span>=<span class="str">"hero"</span>&gt;' },
+    { html: '&nbsp;&nbsp;&lt;<span class="tag">h1</span>&gt;Built for your business&lt;/<span class="tag">h1</span>&gt;' },
+    { html: '&nbsp;&nbsp;&lt;<span class="tag">p</span>&gt;Fast, clean, mobile-ready.&lt;/<span class="tag">p</span>&gt;' },
+    { html: '&nbsp;&nbsp;&lt;<span class="tag">a</span> <span class="attr">class</span>=<span class="str">"btn"</span>&gt;Get started&lt;/<span class="tag">a</span>&gt;' },
+    { html: '&lt;/<span class="tag">section</span>&gt;' }
+  ];
+  const el = document.getElementById('typewriter');
+  let out = '';
+  let li = 0, ci = 0;
+
+  function type() {
+    if (li >= lines.length) {
+      el.innerHTML = out + '<span class="cursor"></span>';
+      return;
+    }
+    const raw = lines[li].html;
+    // reveal char by char but by raw markup chunks to keep tags intact
+    if (ci === 0 && li > 0) out += '\n';
+    if (ci < raw.length) {
+      // step through in small bites to keep it fast but readable
+      const bite = raw.slice(ci, ci + 3);
+      out += bite;
+      ci += 3;
+      el.innerHTML = out + '<span class="cursor"></span>';
+      setTimeout(type, 18);
+    } else {
+      li++; ci = 0;
+      setTimeout(type, 120);
+    }
+  }
+  type();
+</script>
+
+</body>
+</html>
